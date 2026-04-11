@@ -613,6 +613,36 @@
             <div class="doc-type-name">Consumer Complaint</div>
             <div class="doc-type-desc">Consumer forum complaint</div>
           </div>
+          <div class="doc-type-card" onclick="selectDocType('bail')" id="dt-bail">
+            <div class="doc-type-icon">🔓</div>
+            <div class="doc-type-name">Bail Application</div>
+            <div class="doc-type-desc">Regular / anticipatory bail</div>
+          </div>
+          <div class="doc-type-card" onclick="selectDocType('rti')" id="dt-rti">
+            <div class="doc-type-icon">📋</div>
+            <div class="doc-type-name">RTI Application</div>
+            <div class="doc-type-desc">Right to Information request</div>
+          </div>
+          <div class="doc-type-card" onclick="selectDocType('property')" id="dt-property">
+            <div class="doc-type-icon">🏡</div>
+            <div class="doc-type-name">Property Sale Agreement</div>
+            <div class="doc-type-desc">Sale deed / agreement to sell</div>
+          </div>
+          <div class="doc-type-card" onclick="selectDocType('employment')" id="dt-employment">
+            <div class="doc-type-icon">💼</div>
+            <div class="doc-type-name">Employment Contract</div>
+            <div class="doc-type-desc">Job offer / appointment letter</div>
+          </div>
+          <div class="doc-type-card" onclick="selectDocType('partnership')" id="dt-partnership">
+            <div class="doc-type-icon">🤝</div>
+            <div class="doc-type-name">Partnership Deed</div>
+            <div class="doc-type-desc">Business partnership agreement</div>
+          </div>
+          <div class="doc-type-card" onclick="selectDocType('divorce')" id="dt-divorce">
+            <div class="doc-type-icon">💔</div>
+            <div class="doc-type-name">Divorce Petition</div>
+            <div class="doc-type-desc">Mutual consent divorce</div>
+          </div>
         </div>
         <div class="card" id="doc-form-area" style="display:none">
           <div class="doc-form" id="doc-form-fields"></div>
@@ -1079,7 +1109,58 @@ const docForms = {
     { label:'Amount Paid (₹)', id:'d-amount', type:'text', ph:'Amount' },
     { label:'Complaint Details', id:'d-compdetails', type:'textarea', ph:'Describe the problem...' },
     { label:'Relief Sought', id:'d-relief', type:'text', ph:'What compensation you want' },
-  ]
+  ],
+  bail: [
+    { label:'Applicant Name', id:'d-applicant', type:'text', ph:'Accused full name' },
+    { label:'Father Name', id:'d-bailfather', type:'text', ph:'Father name' },
+    { label:'Address', id:'d-bailaddr', type:'text', ph:'Permanent address' },
+    { label:'FIR Number', id:'d-fir', type:'text', ph:'e.g. FIR No. 123/2026' },
+    { label:'Police Station', id:'d-ps', type:'text', ph:'Police station name' },
+    { label:'Offence / Section', id:'d-offence', type:'text', ph:'e.g. IPC 420, 302' },
+    { label:'Reason for Bail', id:'d-bailreason', type:'textarea', ph:'Why bail should be granted...' },
+  ],
+  rti: [
+    { label:'Applicant Name', id:'d-rtiname', type:'text', ph:'Your full name' },
+    { label:'Address', id:'d-rtiaddr', type:'text', ph:'Your full address' },
+    { label:'Public Authority', id:'d-authority', type:'text', ph:'e.g. Municipal Corporation Delhi' },
+    { label:'Information Sought', id:'d-info', type:'textarea', ph:'What information you want...' },
+    { label:'Time Period', id:'d-period', type:'text', ph:'e.g. 2020-2026' },
+  ],
+  property: [
+    { label:'Seller Name', id:'d-seller', type:'text', ph:'Full name' },
+    { label:'Buyer Name', id:'d-buyer', type:'text', ph:'Full name' },
+    { label:'Property Description', id:'d-propdesc', type:'textarea', ph:'Full property details, area, location...' },
+    { label:'Sale Price (₹)', id:'d-price', type:'text', ph:'e.g. 5000000' },
+    { label:'Advance Paid (₹)', id:'d-advance', type:'text', ph:'Token amount' },
+    { label:'Possession Date', id:'d-possession', type:'date' },
+  ],
+  employment: [
+    { label:'Employer / Company Name', id:'d-employer', type:'text', ph:'Company name' },
+    { label:'Employee Name', id:'d-employee', type:'text', ph:'Full name' },
+    { label:'Designation', id:'d-designation', type:'text', ph:'e.g. Software Engineer' },
+    { label:'Monthly Salary (₹)', id:'d-salary', type:'text', ph:'e.g. 50000' },
+    { label:'Joining Date', id:'d-joining', type:'date' },
+    { label:'Notice Period', id:'d-notice', type:'text', ph:'e.g. 30 days' },
+    { label:'Job Location', id:'d-location', type:'text', ph:'City / Office address' },
+  ],
+  partnership: [
+    { label:'Partner 1 Name', id:'d-p1', type:'text', ph:'Full name' },
+    { label:'Partner 2 Name', id:'d-p2', type:'text', ph:'Full name' },
+    { label:'Firm Name', id:'d-firm', type:'text', ph:'Business name' },
+    { label:'Business Nature', id:'d-business', type:'text', ph:'e.g. Trading, Manufacturing' },
+    { label:'Capital Contribution', id:'d-capital', type:'text', ph:'e.g. P1: ₹5L, P2: ₹5L' },
+    { label:'Profit Sharing Ratio', id:'d-profit', type:'text', ph:'e.g. 50:50' },
+    { label:'Business Address', id:'d-bizaddr', type:'text', ph:'Registered address' },
+  ],
+  divorce: [
+    { label:'Husband Name', id:'d-husband', type:'text', ph:'Full name' },
+    { label:'Wife Name', id:'d-wife', type:'text', ph:'Full name' },
+    { label:'Marriage Date', id:'d-marriagedate', type:'date' },
+    { label:'Marriage Place', id:'d-marriageplace', type:'text', ph:'City / venue' },
+    { label:'Children (if any)', id:'d-children', type:'text', ph:'Names and ages, or None' },
+    { label:'Reason for Divorce', id:'d-divorsereason', type:'textarea', ph:'Brief reason for mutual separation...' },
+    { label:'Alimony / Settlement', id:'d-alimony', type:'text', ph:'Any financial settlement agreed' },
+  ],
 };
 
 function selectDocType(type) {
@@ -1110,7 +1191,13 @@ async function generateDocument() {
     rent: `Generate a professional Rent Agreement for India in English. Details:\n${values}\nInclude all standard clauses: rent, deposit, maintenance, termination, etc. Format properly.`,
     notice: `Generate a formal Legal Notice for India in English. Details:\n${values}\nUse proper legal language. Format: From, To, Date, Subject, Body with demand and time limit.`,
     affidavit: `Generate a proper Affidavit for India in English. Details:\n${values}\nInclude proper affidavit format with verification clause.`,
-    complaint: `Generate a Consumer Forum Complaint for India. Details:\n${values}\nFormat properly for District Consumer Disputes Redressal Commission.`
+    complaint: `Generate a Consumer Forum Complaint for India. Details:\n${values}\nFormat properly for District Consumer Disputes Redressal Commission.`,
+    bail: `Generate a formal Bail Application for India in English. Details:\n${values}\nInclude all standard bail application clauses, grounds for bail, and prayer. Address to Sessions Court.`,
+    rti: `Generate a proper RTI Application under Right to Information Act 2005 for India. Details:\n${values}\nInclude proper format with application fee mention of ₹10 and all required details.`,
+    property: `Generate a Property Sale Agreement / Agreement to Sell for India in English. Details:\n${values}\nInclude all standard clauses: payment terms, possession, indemnity, default clause.`,
+    employment: `Generate a professional Employment Appointment Letter / Contract for India in English. Details:\n${values}\nInclude designation, salary, terms, confidentiality, notice period clauses.`,
+    partnership: `Generate a Partnership Deed for India in English. Details:\n${values}\nInclude capital, profit sharing, duties, banking, dissolution clauses as per Indian Partnership Act.`,
+    divorce: `Generate a Mutual Consent Divorce Petition under Section 13B of Hindu Marriage Act for India. Details:\n${values}\nInclude all required legal clauses, prayer, and verification.`,
   };
 
   try {
