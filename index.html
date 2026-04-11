@@ -1156,7 +1156,8 @@ function shareOnWhatsApp(id) {
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
-  reminders = reminders.filter(r => r.id !== id);
+
+function deleteReminder(id) {
   localStorage.setItem('nyaydesk_reminders', JSON.stringify(reminders));
   renderReminders();
 }
