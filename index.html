@@ -338,6 +338,8 @@
     .reminder-date { color: var(--text2); font-size: 0.8rem; margin-top: 2px; }
     .reminder-delete { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 1.1rem; }
     .reminder-delete:hover { color: var(--red); }
+    .reminder-wa { background: none; border: none; color: #25D366; cursor: pointer; font-size: 1.1rem; }
+    .reminder-wa:hover { opacity: 0.8; }
 
     /* Q&A */
     .question-card {
@@ -565,11 +567,24 @@
       <!-- IPC/CrPC -->
       <div id="ipc-page" class="page">
         <div class="page-title">📖 IPC / CrPC Search</div>
-        <div class="page-subtitle">Search Indian Penal Code and Criminal Procedure Code sections</div>
+        <div class="page-subtitle">100+ sections — IPC, CrPC, Consumer Protection, Traffic Laws</div>
         <div class="search-bar">
-          <input type="text" id="ipc-search" placeholder="e.g. theft, murder, section 420, bail..." onkeydown="if(event.key==='Enter')searchIPC()" />
+          <input type="text" id="ipc-search" placeholder="e.g. theft, murder, bail, section 420, FIR..." onkeydown="if(event.key==='Enter')searchIPC()" />
           <button onclick="searchIPC()">Search</button>
         </div>
+        <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;">
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('')">All</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Against Body')">⚔️ Body</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Against Women')">👩 Women</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Property')">🏠 Property</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('CrPC - Bail')">⚖️ Bail</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('CrPC - FIR')">📋 FIR</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('CrPC - Arrest')">👮 Arrest</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Consumer')">🛒 Consumer</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Traffic')">🚗 Traffic</span>
+          <span class="tag" style="cursor:pointer;padding:6px 14px" onclick="filterByCategory('Fraud & Forgery')">📄 Fraud</span>
+        </div>
+        <div id="ipc-count" style="color:var(--text2);font-size:0.82rem;margin-bottom:12px;"></div>
         <div id="ipc-results"></div>
       </div>
 
@@ -882,30 +897,153 @@ function filterBySpec(s) { renderLawyers('', s); }
 
 // ========== IPC SEARCH ==========
 const ipcData = [
-  { section:'IPC 302', title:'Murder', desc:'Whoever commits murder shall be punished with death or imprisonment for life and fine.' },
-  { section:'IPC 376', title:'Rape', desc:'Punishment for rape — rigorous imprisonment not less than ten years, extendable to life.' },
-  { section:'IPC 420', title:'Cheating and dishonestly inducing delivery of property', desc:'Punishment up to 7 years imprisonment and fine.' },
-  { section:'IPC 498A', title:'Cruelty by husband or relatives', desc:'Whoever subjects wife to cruelty — imprisonment up to 3 years and fine.' },
-  { section:'IPC 354', title:'Assault or criminal force to woman', desc:'Punishable with imprisonment of 1 to 5 years and fine.' },
-  { section:'IPC 379', title:'Theft', desc:'Imprisonment up to 3 years, or fine, or both.' },
-  { section:'IPC 304B', title:'Dowry Death', desc:'Imprisonment not less than 7 years, extendable to life.' },
-  { section:'IPC 406', title:'Criminal breach of trust', desc:'Imprisonment up to 3 years, or fine, or both.' },
-  { section:'CrPC 41', title:'When police may arrest without warrant', desc:'Police can arrest a person in cognizable offences without a magistrate warrant.' },
-  { section:'CrPC 438', title:'Anticipatory Bail', desc:'Direction for grant of bail to a person apprehending arrest.' },
-  { section:'CrPC 125', title:'Maintenance of wives, children and parents', desc:'Magistrate can order maintenance allowance for wife, children or parents.' },
-  { section:'IPC 323', title:'Punishment for voluntarily causing hurt', desc:'Imprisonment up to 1 year, or fine up to ₹1000, or both.' },
-  { section:'IPC 506', title:'Criminal Intimidation', desc:'Imprisonment up to 2 years, or fine, or both. Up to 7 years if threat to cause death.' },
+  // IPC - OFFENCES AGAINST BODY
+  { section:'IPC 299', title:'Culpable Homicide', desc:'Whoever causes death by doing an act with intention of causing death, or with knowledge that such act is likely to cause death.', category:'Against Body' },
+  { section:'IPC 300', title:'Murder', desc:'Culpable homicide is murder if done with intention to cause death, or causing bodily injury likely to cause death.', category:'Against Body' },
+  { section:'IPC 302', title:'Punishment for Murder', desc:'Whoever commits murder shall be punished with death or imprisonment for life and shall also be liable to fine.', category:'Against Body' },
+  { section:'IPC 304', title:'Punishment for Culpable Homicide not amounting to Murder', desc:'Imprisonment up to 10 years or life, with fine. If without intention — imprisonment up to 10 years or fine or both.', category:'Against Body' },
+  { section:'IPC 304A', title:'Causing Death by Negligence', desc:'Whoever causes death of any person by doing any rash or negligent act — imprisonment up to 2 years, or fine, or both.', category:'Against Body' },
+  { section:'IPC 304B', title:'Dowry Death', desc:'If wife dies within 7 years of marriage due to burns/bodily injury — imprisonment not less than 7 years, extendable to life.', category:'Against Body' },
+  { section:'IPC 306', title:'Abetment of Suicide', desc:'If any person commits suicide, whoever abets the commission shall be punished with imprisonment up to 10 years and fine.', category:'Against Body' },
+  { section:'IPC 307', title:'Attempt to Murder', desc:'Whoever does any act with intention or knowledge to cause death — imprisonment up to 10 years and fine. If hurt caused — life imprisonment.', category:'Against Body' },
+  { section:'IPC 308', title:'Attempt to commit Culpable Homicide', desc:'Imprisonment up to 3 years, or fine, or both. If hurt caused — imprisonment up to 7 years or fine or both.', category:'Against Body' },
+  { section:'IPC 319', title:'Hurt', desc:'Whoever causes bodily pain, disease or infirmity to any person is said to cause hurt.', category:'Against Body' },
+  { section:'IPC 320', title:'Grievous Hurt', desc:'Emasculation, permanent loss of sight/hearing, loss of limb, fracture of bone, disfiguration of head/face are grievous hurt.', category:'Against Body' },
+  { section:'IPC 323', title:'Punishment for Voluntarily Causing Hurt', desc:'Imprisonment up to 1 year, or fine up to ₹1000, or both.', category:'Against Body' },
+  { section:'IPC 324', title:'Voluntarily Causing Hurt by Dangerous Weapons', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Against Body' },
+  { section:'IPC 325', title:'Punishment for Voluntarily Causing Grievous Hurt', desc:'Imprisonment up to 7 years and fine.', category:'Against Body' },
+  { section:'IPC 326', title:'Voluntarily Causing Grievous Hurt by Dangerous Weapons', desc:'Imprisonment for life, or up to 10 years and fine.', category:'Against Body' },
+  { section:'IPC 354', title:'Assault or Criminal Force to Woman with Intent to Outrage Modesty', desc:'Imprisonment not less than 1 year, extendable to 5 years and fine.', category:'Against Women' },
+  { section:'IPC 354A', title:'Sexual Harassment', desc:'Physical contact and advances, demand for sexual favours — imprisonment up to 3 years or fine or both.', category:'Against Women' },
+  { section:'IPC 354B', title:'Assault with Intent to Disrobe Woman', desc:'Imprisonment not less than 3 years, extendable to 7 years and fine.', category:'Against Women' },
+  { section:'IPC 354C', title:'Voyeurism', desc:'Watching or capturing image of woman in private act — imprisonment 1 to 3 years. Second offence: 3 to 7 years.', category:'Against Women' },
+  { section:'IPC 354D', title:'Stalking', desc:'Following a woman, contacting despite disinterest — imprisonment up to 3 years. Second offence: up to 5 years.', category:'Against Women' },
+  { section:'IPC 375', title:'Rape — Definition', desc:'Sexual intercourse with woman against her will, without consent, or with minor girl constitutes rape.', category:'Against Women' },
+  { section:'IPC 376', title:'Punishment for Rape', desc:'Rigorous imprisonment not less than 10 years, extendable to life imprisonment and fine.', category:'Against Women' },
+  { section:'IPC 376A', title:'Rape causing Death or Persistent Vegetative State', desc:'Rigorous imprisonment not less than 20 years, extendable to life or death.', category:'Against Women' },
+  { section:'IPC 376D', title:'Gang Rape', desc:'Each person shall be punished with rigorous imprisonment not less than 20 years, extendable to life.', category:'Against Women' },
+  { section:'IPC 498A', title:'Cruelty by Husband or Relatives', desc:'Whoever subjects wife to cruelty — imprisonment up to 3 years and fine. Includes mental and physical cruelty and dowry harassment.', category:'Against Women' },
+
+  // IPC - PROPERTY OFFENCES
+  { section:'IPC 378', title:'Theft — Definition', desc:'Whoever intending to take dishonestly any moveable property out of possession of any person without consent commits theft.', category:'Property' },
+  { section:'IPC 379', title:'Punishment for Theft', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Property' },
+  { section:'IPC 380', title:'Theft in Dwelling House', desc:'Theft in building/tent/vessel used as human dwelling — imprisonment up to 7 years and fine.', category:'Property' },
+  { section:'IPC 382', title:'Theft after Preparation for Hurt', desc:'Imprisonment up to 10 years and fine.', category:'Property' },
+  { section:'IPC 383', title:'Extortion — Definition', desc:'Whoever intentionally puts any person in fear of injury and dishonestly induces the person to deliver property commits extortion.', category:'Property' },
+  { section:'IPC 384', title:'Punishment for Extortion', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Property' },
+  { section:'IPC 390', title:'Robbery — Definition', desc:'Theft is robbery if in committing theft, offender voluntarily causes or attempts to cause death, hurt or wrongful restraint.', category:'Property' },
+  { section:'IPC 392', title:'Punishment for Robbery', desc:'Imprisonment up to 10 years and fine. On highway or between sunset and sunrise — up to 14 years.', category:'Property' },
+  { section:'IPC 395', title:'Punishment for Dacoity', desc:'Imprisonment for life, or rigorous imprisonment up to 10 years and fine.', category:'Property' },
+  { section:'IPC 403', title:'Dishonest Misappropriation of Property', desc:'Imprisonment up to 2 years, or fine, or both.', category:'Property' },
+  { section:'IPC 405', title:'Criminal Breach of Trust — Definition', desc:'Whoever being entrusted with property dishonestly misappropriates or converts it to own use commits criminal breach of trust.', category:'Property' },
+  { section:'IPC 406', title:'Punishment for Criminal Breach of Trust', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Property' },
+  { section:'IPC 415', title:'Cheating — Definition', desc:'Whoever deceives any person and fraudulently or dishonestly induces person to deliver property commits cheating.', category:'Property' },
+  { section:'IPC 417', title:'Punishment for Cheating', desc:'Imprisonment up to 1 year, or fine, or both.', category:'Property' },
+  { section:'IPC 420', title:'Cheating and Dishonestly Inducing Delivery of Property', desc:'Imprisonment up to 7 years and fine. More serious form of cheating involving property delivery.', category:'Property' },
+  { section:'IPC 425', title:'Mischief — Definition', desc:'Whoever causes destruction of property or any change that destroys or diminishes its value commits mischief.', category:'Property' },
+  { section:'IPC 426', title:'Punishment for Mischief', desc:'Imprisonment up to 3 months, or fine, or both.', category:'Property' },
+  { section:'IPC 441', title:'Criminal Trespass', desc:'Entering property in possession of another with intent to commit offence or to intimidate/annoy.', category:'Property' },
+  { section:'IPC 447', title:'Punishment for Criminal Trespass', desc:'Imprisonment up to 3 months, or fine up to ₹500, or both.', category:'Property' },
+  { section:'IPC 448', title:'Punishment for House Trespass', desc:'Imprisonment up to 1 year, or fine up to ₹1000, or both.', category:'Property' },
+
+  // IPC - FRAUD & FORGERY
+  { section:'IPC 463', title:'Forgery — Definition', desc:'Making false document or electronic record with intent to cause damage or injury to any person or to defraud.', category:'Fraud & Forgery' },
+  { section:'IPC 465', title:'Punishment for Forgery', desc:'Imprisonment up to 2 years, or fine, or both.', category:'Fraud & Forgery' },
+  { section:'IPC 467', title:'Forgery of Valuable Security', desc:'Forgery of valuable security, will, or authority to adopt — imprisonment for life or up to 10 years and fine.', category:'Fraud & Forgery' },
+  { section:'IPC 468', title:'Forgery for Purpose of Cheating', desc:'Imprisonment up to 7 years and fine.', category:'Fraud & Forgery' },
+  { section:'IPC 471', title:'Using Forged Document as Genuine', desc:'Same punishment as for forgery of such document.', category:'Fraud & Forgery' },
+
+  // IPC - PUBLIC ORDER
+  { section:'IPC 141', title:'Unlawful Assembly', desc:'Assembly of 5 or more persons with common object to commit offence or resist legal process is unlawful assembly.', category:'Public Order' },
+  { section:'IPC 143', title:'Punishment for Unlawful Assembly', desc:'Imprisonment up to 6 months, or fine, or both.', category:'Public Order' },
+  { section:'IPC 144', title:'Joining Unlawful Assembly Armed with Deadly Weapon', desc:'Imprisonment up to 2 years, or fine, or both.', category:'Public Order' },
+  { section:'IPC 147', title:'Punishment for Rioting', desc:'Imprisonment up to 2 years, or fine, or both.', category:'Public Order' },
+  { section:'IPC 148', title:'Rioting Armed with Deadly Weapon', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Public Order' },
+  { section:'IPC 153A', title:'Promoting Enmity Between Groups', desc:'Promoting enmity on grounds of religion, race, language — imprisonment up to 3 years or fine or both.', category:'Public Order' },
+  { section:'IPC 295A', title:'Deliberate Acts to Outrage Religious Feelings', desc:'Imprisonment up to 3 years, or fine, or both.', category:'Public Order' },
+  { section:'IPC 499', title:'Defamation — Definition', desc:'Making or publishing imputation concerning person with intent to harm reputation constitutes defamation.', category:'Public Order' },
+  { section:'IPC 500', title:'Punishment for Defamation', desc:'Simple imprisonment up to 2 years, or fine, or both.', category:'Public Order' },
+  { section:'IPC 503', title:'Criminal Intimidation — Definition', desc:'Threatening person with injury to person, reputation or property to cause alarm or compel action.', category:'Public Order' },
+  { section:'IPC 506', title:'Punishment for Criminal Intimidation', desc:'Imprisonment up to 2 years, or fine, or both. Up to 7 years if threat to cause death or grievous hurt.', category:'Public Order' },
+  { section:'IPC 509', title:'Word or Gesture Intended to Insult Modesty of Woman', desc:'Imprisonment up to 3 years and fine.', category:'Against Women' },
+
+  // IPC - AGAINST STATE
+  { section:'IPC 121', title:'Waging War Against Government of India', desc:'Punishment with death or imprisonment for life and fine.', category:'Against State' },
+  { section:'IPC 124A', title:'Sedition', desc:'Whoever excites disaffection towards Government by words, signs, or visible representation — imprisonment for life or up to 3 years and fine.', category:'Against State' },
+
+  // CrPC SECTIONS
+  { section:'CrPC 41', title:'When Police May Arrest Without Warrant', desc:'Police can arrest without warrant in cognizable offences punishable up to 7 years if necessary conditions are met.', category:'CrPC - Arrest' },
+  { section:'CrPC 41A', title:'Notice of Appearance Before Police Officer', desc:'Police shall issue notice instead of arrest if offence is punishable up to 7 years — person must appear as directed.', category:'CrPC - Arrest' },
+  { section:'CrPC 46', title:'How Arrest is Made', desc:'Arrest is made by actually touching or confining body. If resisted, all means necessary to effect arrest may be used.', category:'CrPC - Arrest' },
+  { section:'CrPC 50', title:'Person Arrested to be Informed of Grounds', desc:'Every person arrested must be immediately informed of grounds of arrest and right to bail.', category:'CrPC - Arrest' },
+  { section:'CrPC 56', title:'Person Arrested to be Taken Before Magistrate', desc:'Police must produce arrested person before magistrate within 24 hours of arrest.', category:'CrPC - Arrest' },
+  { section:'CrPC 57', title:'Person Not to be Detained More than 24 Hours', desc:'No police officer shall detain arrested person for more than 24 hours without magistrate order.', category:'CrPC - Arrest' },
+  { section:'CrPC 82', title:'Proclamation for Person Absconding', desc:'If court believes person has absconded, it may publish written proclamation requiring appearance within 30 days.', category:'CrPC - Warrants' },
+  { section:'CrPC 91', title:'Summons to Produce Document', desc:'Court may summon any person to produce document or thing necessary for investigation or trial.', category:'CrPC - Warrants' },
+  { section:'CrPC 100', title:'Persons in Charge of Closed Place to Allow Search', desc:'Occupant of closed place must allow police to search and provide all reasonable facilities.', category:'CrPC - Search' },
+  { section:'CrPC 125', title:'Order for Maintenance of Wives, Children and Parents', desc:'Magistrate can order maintenance allowance for wife, legitimate/illegitimate child, or parents unable to maintain themselves.', category:'CrPC - Maintenance' },
+  { section:'CrPC 145', title:'Procedure where Dispute Concerning Land', desc:'Executive magistrate may attach disputed property if apprehension of breach of peace concerning land.', category:'CrPC - Disputes' },
+  { section:'CrPC 154', title:'FIR — Information in Cognizable Cases', desc:'Information relating to cognizable offence given to police shall be reduced in writing — this is the FIR.', category:'CrPC - FIR' },
+  { section:'CrPC 155', title:'Information as to Non-Cognizable Cases', desc:'In non-cognizable offences, police shall refer complainant to magistrate and cannot investigate without magistrate order.', category:'CrPC - FIR' },
+  { section:'CrPC 156', title:'Police Officer Power to Investigate', desc:'Police officer may investigate cognizable offence without magistrate order.', category:'CrPC - Investigation' },
+  { section:'CrPC 157', title:'Procedure for Investigation', desc:'Police officer shall notify magistrate and proceed to spot to investigate facts and circumstances.', category:'CrPC - Investigation' },
+  { section:'CrPC 161', title:'Examination of Witnesses by Police', desc:'Police officer may examine any person acquainted with facts during investigation. Person bound to answer truly.', category:'CrPC - Investigation' },
+  { section:'CrPC 164', title:'Recording of Confessions and Statements', desc:'Magistrate may record confessions and statements during investigation. Confession must be voluntary.', category:'CrPC - Investigation' },
+  { section:'CrPC 167', title:'Procedure when Investigation Cannot be Completed in 24 Hours', desc:'If investigation cannot be completed — magistrate may authorise detention. After 60/90 days — bail as of right (Default Bail).', category:'CrPC - Detention' },
+  { section:'CrPC 173', title:'Report of Police Officer on Completion of Investigation', desc:'Police must submit charge sheet/final report to magistrate after completing investigation (within 60/90 days).', category:'CrPC - Chargesheet' },
+  { section:'CrPC 190', title:'Cognizance of Offences by Magistrate', desc:'Magistrate may take cognizance of offence upon receiving complaint, police report, or own knowledge.', category:'CrPC - Trial' },
+  { section:'CrPC 200', title:'Examination of Complainant', desc:'Magistrate taking cognizance on complaint shall examine complainant and witnesses on oath.', category:'CrPC - Trial' },
+  { section:'CrPC 226', title:'Opening Case for Prosecution', desc:'When accused appears, prosecutor shall open case describing charge and stating evidence to prove guilt.', category:'CrPC - Trial' },
+  { section:'CrPC 320', title:'Compounding of Offences', desc:'Certain offences may be compounded (settled) by parties with or without permission of court.', category:'CrPC - Settlement' },
+  { section:'CrPC 357', title:'Order to Pay Compensation', desc:'Court may order convicted person to pay compensation to victims from fine or as separate order.', category:'CrPC - Compensation' },
+  { section:'CrPC 376', title:'Special Courts for Rape Cases', desc:'Trial of rape cases shall be conducted as far as possible by women judges and in-camera proceedings.', category:'CrPC - Special' },
+  { section:'CrPC 436', title:'Bail in Bailable Offences', desc:'In bailable offences, accused has right to bail. Police or court shall release on bail as matter of right.', category:'CrPC - Bail' },
+  { section:'CrPC 437', title:'Bail in Non-Bailable Offences', desc:'Court may grant bail in non-bailable offences. Bail may be refused if offence is punishable with death or life imprisonment.', category:'CrPC - Bail' },
+  { section:'CrPC 438', title:'Anticipatory Bail', desc:'Sessions Court or High Court may direct that accused be released on bail if apprehending arrest for non-bailable offence.', category:'CrPC - Bail' },
+  { section:'CrPC 439', title:'Special Powers of High Court or Sessions Court Regarding Bail', desc:'High Court or Sessions Court may grant bail, reduce bail amount, or impose conditions as it thinks fit.', category:'CrPC - Bail' },
+  { section:'CrPC 482', title:'Saving of Inherent Powers of High Court', desc:'High Court may make orders to prevent abuse of process or secure ends of justice — used to quash FIR.', category:'CrPC - High Court' },
+
+  // MOTOR VEHICLES ACT
+  { section:'MV 184', title:'Driving Dangerously', desc:'Driving at speed or in manner dangerous to public — imprisonment up to 1 year or fine up to ₹5000 for first offence.', category:'Traffic' },
+  { section:'MV 185', title:'Driving by Drunken Person', desc:'Driving with blood alcohol exceeding 30mg per 100ml blood — imprisonment up to 6 months or fine up to ₹10,000.', category:'Traffic' },
+  { section:'MV 196', title:'Driving Without Insurance', desc:'Driving uninsured vehicle — imprisonment up to 3 months or fine up to ₹2000 or both.', category:'Traffic' },
+
+  // CONSUMER PROTECTION
+  { section:'CPA 2(9)', title:'Consumer — Definition', desc:'Person who buys goods or hires services for consideration. Includes beneficiary. Excludes commercial purchase.', category:'Consumer' },
+  { section:'CPA 2(47)', title:'Unfair Trade Practice', desc:'False representation of goods/services, misleading advertisements, hoarding — constitute unfair trade practice.', category:'Consumer' },
+  { section:'CPA 35', title:'Complaint Before District Commission', desc:'Consumer complaint can be filed before District Commission for claims up to ₹1 crore.', category:'Consumer' },
+  { section:'CPA 47', title:'State Commission Jurisdiction', desc:'State Consumer Commission handles complaints between ₹1 crore and ₹10 crore.', category:'Consumer' },
+  { section:'CPA 58', title:'National Commission Jurisdiction', desc:'National Consumer Commission handles complaints above ₹10 crore.', category:'Consumer' },
 ];
 
 function searchIPC() {
   const q = document.getElementById('ipc-search').value.toLowerCase().trim();
   const res = document.getElementById('ipc-results');
-  if (!q) { res.innerHTML = ''; return; }
-  const found = ipcData.filter(i => i.section.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q));
-  if (!found.length) { res.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div><p>No sections found. Try different keywords.</p></div>'; return; }
+  const count = document.getElementById('ipc-count');
+  if (!q) { res.innerHTML = ''; count.textContent = ''; return; }
+  const found = ipcData.filter(i => i.section.toLowerCase().includes(q) || i.title.toLowerCase().includes(q) || i.desc.toLowerCase().includes(q) || i.category.toLowerCase().includes(q));
+  if (!found.length) { res.innerHTML = '<div class="empty-state"><div class="empty-icon">📖</div><p>No sections found. Try different keywords.</p></div>'; count.textContent = ''; return; }
+  count.textContent = `${found.length} section(s) found`;
+  renderIPC(found);
+}
+
+function filterByCategory(cat) {
+  const res = document.getElementById('ipc-results');
+  const count = document.getElementById('ipc-count');
+  document.getElementById('ipc-search').value = '';
+  const found = cat === '' ? ipcData : ipcData.filter(i => i.category === cat);
+  count.textContent = `${found.length} section(s)`;
+  renderIPC(found);
+}
+
+function renderIPC(found) {
+  const res = document.getElementById('ipc-results');
   res.innerHTML = found.map(i => `
     <div class="ipc-result">
-      <div class="ipc-section">${i.section}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="ipc-section">${i.section}</div>
+        <span class="tag">${i.category}</span>
+      </div>
       <div class="ipc-title">${i.title}</div>
       <div class="ipc-desc">${i.desc}</div>
     </div>`).join('');
@@ -1011,7 +1149,13 @@ function addReminder() {
   renderReminders();
 }
 
-function deleteReminder(id) {
+function shareOnWhatsApp(id) {
+  const r = reminders.find(r => r.id === id);
+  if (!r) return;
+  const msg = `⚖️ *NyayDesk Court Reminder*\n\n📋 *${r.title}*\n📅 Date: ${r.date}\n🔖 Type: ${r.type}\n\n_Sent via NyayDesk — nyaydeskk.netlify.app_`;
+  const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
   reminders = reminders.filter(r => r.id !== id);
   localStorage.setItem('nyaydesk_reminders', JSON.stringify(reminders));
   renderReminders();
@@ -1032,6 +1176,7 @@ function renderReminders() {
         <div class="reminder-title">${r.title}</div>
         <div class="reminder-date">📅 ${r.date} &nbsp;|&nbsp; ${r.type}</div>
       </div>
+      <button class="reminder-wa" onclick="shareOnWhatsApp(${r.id})" title="Share on WhatsApp">📲</button>
       <button class="reminder-delete" onclick="deleteReminder(${r.id})">🗑️</button>
     </div>`).join('');
 }
