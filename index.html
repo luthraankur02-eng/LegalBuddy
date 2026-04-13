@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NyayDesk — Indian Legal Assistant</title>
+  <title>LegalBuddy — Indian Legal Assistant</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -409,7 +409,7 @@
 <div id="auth-screen">
   <div class="auth-box">
     <div class="auth-logo">
-      <h1>⚖️ NyayDesk</h1>
+      <h1>⚖️ LegalBuddy</h1>
       <p>Indian Legal Assistant Platform</p>
     </div>
     <div class="auth-tabs">
@@ -460,7 +460,7 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="sidebar-logo">
-        <h2>⚖️ NyayDesk</h2>
+        <h2>⚖️ LegalBuddy</h2>
         <p>Your Legal Companion</p>
       </div>
       <div class="user-info">
@@ -500,7 +500,7 @@
       <div id="home-page" class="page active">
         <div class="welcome-banner">
           <h2>Namaste, <span id="welcome-name">User</span>! 🙏</h2>
-          <p>How can NyayDesk help you with legal matters today?</p>
+          <p>How can LegalBuddy help you with legal matters today?</p>
         </div>
         <div class="quick-actions">
           <div class="quick-action" onclick="showPage('chat')">
@@ -536,7 +536,7 @@
         <div class="chat-messages" id="chat-messages">
           <div class="msg ai">
             <div class="msg-avatar">⚖</div>
-            <div class="msg-bubble">Namaste! Main NyayDesk AI hoon. Indian law ke baare mein kuch bhi puchh sakte hain — Hindi ya English mein. Kaise help karun? 🙏</div>
+            <div class="msg-bubble">Namaste! Main LegalBuddy AI hoon. Indian law ke baare mein kuch bhi puchh sakte hain — Hindi ya English mein. Kaise help karun? 🙏</div>
           </div>
         </div>
         <div class="chat-input-area">
@@ -1239,7 +1239,7 @@ function addReminder() {
 function shareOnWhatsApp(id) {
   const r = reminders.find(r => r.id === id);
   if (!r) return;
-  const msg = `⚖️ *NyayDesk Court Reminder*\n\n📋 *${r.title}*\n📅 Date: ${r.date}\n🔖 Type: ${r.type}\n\n_Sent via NyayDesk — nyaydeskk.netlify.app_`;
+  const msg = `⚖️ *LegalBuddy Court Reminder*\n\n📋 *${r.title}*\n📅 Date: ${r.date}\n🔖 Type: ${r.type}\n\n_Sent via LegalBuddy — legalbuddy-india.netlify.app_`;
   const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
 }
