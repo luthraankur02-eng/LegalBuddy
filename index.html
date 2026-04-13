@@ -101,6 +101,7 @@
       border-right: 1px solid rgba(255,255,255,0.06);
       display: flex; flex-direction: column;
       padding: 0;
+      overflow-y: auto;
     }
     .sidebar-logo {
       padding: 24px 20px 16px;
@@ -399,11 +400,42 @@
       .quick-actions { grid-template-columns: repeat(2, 1fr); }
       .grid-2, .grid-3 { grid-template-columns: 1fr; }
     }
-    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
+    /* Disclaimer Modal */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: var(--navy2); border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 16px; padding: 28px; max-width: 480px; width: 100%;
+    }
+    .modal-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--white); margin-bottom: 16px; }
+    .modal-body { color: var(--text); font-size: 0.88rem; line-height: 1.8; margin-bottom: 20px; }
+    .modal-actions { display: flex; gap: 10px; } border: 2px solid rgba(255,255,255,0.2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
+
+<!-- Disclaimer Modal -->
+<div id="disclaimer-modal" style="display:none" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title">⚠️ Important Disclaimer</div>
+    <div class="modal-body">
+      LegalBuddy provides <strong style="color:var(--white)">general legal information only</strong> — NOT legal advice.<br><br>
+      • This is <strong style="color:var(--red)">NOT</strong> a substitute for a qualified lawyer<br>
+      • AI responses may contain errors<br>
+      • Do not share Aadhaar, PAN or bank details<br>
+      • For emergencies, call <strong style="color:var(--gold)">Legal Aid: 15100</strong>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-primary" style="flex:1" onclick="acceptDisclaimer()">I Understand & Agree</button>
+      <button class="btn-sm btn-outline" style="padding:10px 16px" onclick="showPage('home')">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
@@ -447,6 +479,12 @@
           <option value="lawyer">Lawyer</option>
           <option value="student">Law Student</option>
         </select>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:16px">
+        <input type="checkbox" id="signup-terms" style="margin-top:3px;min-width:16px;accent-color:var(--gold)" />
+        <label for="signup-terms" style="font-size:0.82rem;color:var(--text2);line-height:1.6;text-transform:none;letter-spacing:0">
+          I agree to LegalBuddy's <span style="color:var(--gold);cursor:pointer" onclick="showPage('terms')">Terms & Disclaimer</span>. I understand this platform provides general legal information only, NOT legal advice.
+        </label>
       </div>
       <button class="btn-primary" onclick="doSignup()">Create Account</button>
     </div>
@@ -493,6 +531,11 @@
         <div class="nav-section-title">Legal</div>
         <div class="nav-item" onclick="showPage('terms')"><span class="nav-icon">📋</span> Disclaimer & Terms</div>
         <div class="nav-item" onclick="showPage('register-lawyer')"><span class="nav-icon">⚖️</span> Register as Lawyer</div>
+      </div>
+
+      <div class="nav-section" id="admin-nav" style="display:none">
+        <div class="nav-section-title">Admin</div>
+        <div class="nav-item" onclick="showPage('admin')"><span class="nav-icon">🔧</span> Admin Panel</div>
       </div>
 
       <div class="logout-btn" onclick="doLogout()">🚪 Logout</div>
@@ -761,6 +804,29 @@
           </p>
         </div>
       </div>
+      <!-- ADMIN PANEL -->
+      <div id="admin-page" class="page">
+        <div class="page-title">🔧 Admin Panel</div>
+        <div class="page-subtitle">Manage lawyer registrations and platform</div>
+
+        <div class="grid-3" style="margin-bottom:24px">
+          <div class="stat-card"><div class="stat-num" id="admin-pending-count">0</div><div class="stat-label">Pending Applications</div></div>
+          <div class="stat-card"><div class="stat-num" id="admin-approved-count">0</div><div class="stat-label">Approved Lawyers</div></div>
+          <div class="stat-card"><div class="stat-num" id="admin-rejected-count">0</div><div class="stat-label">Rejected</div></div>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+            <button class="btn-sm btn-gold" onclick="loadAdminApplications('pending')">⏳ Pending</button>
+            <button class="btn-sm btn-outline" onclick="loadAdminApplications('approved')">✅ Approved</button>
+            <button class="btn-sm btn-outline" onclick="loadAdminApplications('rejected')">❌ Rejected</button>
+          </div>
+          <div id="admin-applications-list">
+            <div class="empty-state"><div class="empty-icon">🔧</div><p>Click a filter to load applications</p></div>
+          </div>
+        </div>
+      </div>
+
       <!-- LAWYER REGISTRATION -->
       <div id="register-lawyer-page" class="page">
         <div class="page-title">⚖️ Register as Lawyer</div>
@@ -918,7 +984,9 @@ async function doSignup() {
   const email = document.getElementById('signup-email').value.trim();
   const pass = document.getElementById('signup-pass').value;
   const role = document.getElementById('signup-role').value;
+  const terms = document.getElementById('signup-terms').checked;
   if (!name || !email || !pass) return showError('Please fill all fields');
+  if (!terms) return showError('Please agree to Terms & Disclaimer to continue');
   try {
     const cred = await auth.createUserWithEmailAndPassword(email, pass);
     await db.collection('users').doc(cred.user.uid).set({ name, email, role, createdAt: new Date() });
@@ -957,7 +1025,23 @@ function loadApp() {
   document.getElementById('sidebar-avatar').textContent = name.charAt(0).toUpperCase();
   document.getElementById('sidebar-role').textContent = role.charAt(0).toUpperCase() + role.slice(1);
   if (role === 'lawyer') document.getElementById('lawyer-nav').style.display = 'block';
-  renderReminders(); renderMyQuestions();
+  if (currentUser && currentUser.email === ADMIN_EMAIL) {
+    document.getElementById('admin-nav').style.display = 'block';
+  }
+  renderReminders(); renderMyQuestions(); loadApprovedLawyers();
+}
+
+// ========== DISCLAIMER MODAL ==========
+function showChatDisclaimer() {
+  const accepted = localStorage.getItem('lb_disclaimer_accepted');
+  if (!accepted) {
+    document.getElementById('disclaimer-modal').style.display = 'flex';
+  }
+}
+
+function acceptDisclaimer() {
+  localStorage.setItem('lb_disclaimer_accepted', 'true');
+  document.getElementById('disclaimer-modal').style.display = 'none';
 }
 
 // ========== NAVIGATION ==========
@@ -969,6 +1053,8 @@ function showPage(id) {
   if (id === 'lawyers') renderLawyers();
   if (id === 'myq') renderMyQuestions();
   if (id === 'dashboard') renderLawyerDashboard();
+  if (id === 'chat') showChatDisclaimer();
+  if (id === 'ask') showChatDisclaimer();
 }
 
 // ========== AI CHAT ==========
@@ -1033,6 +1119,16 @@ function removeTyping(id) {
 }
 
 // ========== LAWYERS ==========
+let approvedLawyersFromDB = [];
+
+async function loadApprovedLawyers() {
+  try {
+    const snap = await db.collection('approved_lawyers').get();
+    approvedLawyersFromDB = snap.docs.map(doc => doc.data());
+  } catch(e) {
+    approvedLawyersFromDB = [];
+  }
+}
 const lawyersData = [
   { name: 'Adv. Priya Sharma', spec: 'Criminal Law', city: 'Delhi', exp: '12 yrs', fee: '₹500/hr', rating: '4.8', icon: '👩‍⚖️' },
   { name: 'Adv. Rajesh Kumar', spec: 'Family Law', city: 'Mumbai', exp: '8 yrs', fee: '₹400/hr', rating: '4.6', icon: '👨‍⚖️' },
@@ -1044,18 +1140,19 @@ const lawyersData = [
 
 function renderLawyers(filter='', specFilter='') {
   const list = document.getElementById('lawyers-list');
-  let data = lawyersData.filter(l =>
+  const allLawyers = approvedLawyersFromDB.length > 0 ? approvedLawyersFromDB : lawyersData;
+  let data = allLawyers.filter(l =>
     (l.name.toLowerCase().includes(filter.toLowerCase()) || l.city.toLowerCase().includes(filter.toLowerCase()) || l.spec.toLowerCase().includes(filter.toLowerCase())) &&
     (specFilter === '' || l.spec.includes(specFilter))
   );
   if(!data.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No lawyers found</p></div>'; return; }
   list.innerHTML = data.map(l => `
     <div class="lawyer-card" style="margin-bottom:12px">
-      <div class="lawyer-avatar">${l.icon}</div>
+      <div class="lawyer-avatar">${l.icon || '👨‍⚖️'}</div>
       <div class="lawyer-info">
         <div class="lawyer-name">${l.name}</div>
         <div class="lawyer-spec">${l.spec}</div>
-        <div class="lawyer-meta">📍 ${l.city} &nbsp;|&nbsp; ${l.exp} experience &nbsp;|&nbsp; ${l.fee} &nbsp;|&nbsp; ⭐ ${l.rating}</div>
+        <div class="lawyer-meta">📍 ${l.city} &nbsp;|&nbsp; ${l.exp} experience &nbsp;|&nbsp; ${l.fee} &nbsp;|&nbsp; ⭐ ${l.rating || '—'}</div>
         <div class="lawyer-actions">
           <button class="btn-sm btn-gold">Book Consultation</button>
           <button class="btn-sm btn-outline">View Profile</button>
@@ -1441,6 +1538,93 @@ function renderMyQuestions() {
       <span class="question-status ${q.answer ? 'status-answered' : 'status-pending'}">${q.answer ? '✅ Answered' : '⏳ Pending'}</span>
       ${q.answer ? `<div class="answer-box" style="display:block">💬 ${q.answer}</div>` : ''}
     </div>`).join('');
+}
+
+// ========== ADMIN PANEL ==========
+const ADMIN_EMAIL = 'luthraankur02@gmail.com';
+
+async function loadAdminApplications(status) {
+  const list = document.getElementById('admin-applications-list');
+  list.innerHTML = '<div class="empty-state"><div class="spinner"></div><p>Loading...</p></div>';
+
+  try {
+    const snap = await db.collection('lawyer_registrations').where('status', '==', status).get();
+
+    // Update counts
+    const pendingSnap = await db.collection('lawyer_registrations').where('status', '==', 'pending').get();
+    const approvedSnap = await db.collection('lawyer_registrations').where('status', '==', 'approved').get();
+    const rejectedSnap = await db.collection('lawyer_registrations').where('status', '==', 'rejected').get();
+    document.getElementById('admin-pending-count').textContent = pendingSnap.size;
+    document.getElementById('admin-approved-count').textContent = approvedSnap.size;
+    document.getElementById('admin-rejected-count').textContent = rejectedSnap.size;
+
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-state"><div class="empty-icon">📋</div><p>No ' + status + ' applications</p></div>';
+      return;
+    }
+
+    list.innerHTML = snap.docs.map(doc => {
+      const d = doc.data();
+      return `
+      <div class="card" style="margin-bottom:12px;border:1px solid rgba(255,255,255,0.1)">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+          <div>
+            <div style="color:var(--white);font-weight:600;font-size:1rem">${d.name}</div>
+            <div style="color:var(--gold);font-size:0.82rem;margin-top:2px">${d.spec} — ${d.city}</div>
+          </div>
+          <span class="question-status ${d.status === 'pending' ? 'status-pending' : d.status === 'approved' ? 'status-answered' : ''}">${d.status.toUpperCase()}</span>
+        </div>
+        <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.83rem;color:var(--text2)">
+          <div>📧 ${d.email}</div>
+          <div>📞 ${d.phone}</div>
+          <div>⚖️ Bar No: <span style="color:var(--white)">${d.barno}</span></div>
+          <div>🏛️ ${d.barstate}</div>
+          <div>📅 Enrolled: ${d.year}</div>
+          <div>💰 Fee: ₹${d.fee}/hr</div>
+          <div>🏢 ${d.courts}</div>
+          <div>⏱️ ${d.exp} yrs exp</div>
+        </div>
+        ${d.bio ? `<div style="margin-top:10px;font-size:0.83rem;color:var(--text2);line-height:1.6">${d.bio}</div>` : ''}
+        ${status === 'pending' ? `
+        <div style="display:flex;gap:8px;margin-top:14px">
+          <button class="btn-sm btn-gold" onclick="approveRejectLawyer('${doc.id}', 'approved', ${JSON.stringify(d).replace(/'/g, "&#39;")})">✅ Approve</button>
+          <button class="btn-sm btn-outline" style="color:var(--red);border-color:rgba(224,92,92,0.3)" onclick="approveRejectLawyer('${doc.id}', 'rejected', null)">❌ Reject</button>
+        </div>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="empty-state"><p>Error loading: ' + e.message + '</p></div>';
+  }
+}
+
+async function approveRejectLawyer(docId, status, lawyerData) {
+  try {
+    await db.collection('lawyer_registrations').doc(docId).update({ status, reviewedAt: new Date() });
+
+    if (status === 'approved' && lawyerData) {
+      await db.collection('approved_lawyers').doc(docId).set({
+        name: lawyerData.name,
+        spec: lawyerData.spec,
+        city: lawyerData.city,
+        exp: lawyerData.exp + ' yrs',
+        fee: '₹' + lawyerData.fee + '/hr',
+        phone: lawyerData.phone,
+        email: lawyerData.email,
+        barno: lawyerData.barno,
+        courts: lawyerData.courts,
+        bio: lawyerData.bio,
+        rating: '—',
+        icon: '👨‍⚖️',
+        approvedAt: new Date()
+      });
+      alert('✅ Lawyer APPROVED! Now visible in directory.');
+    } else {
+      alert('❌ Lawyer rejected.');
+    }
+    loadAdminApplications('pending');
+  } catch(e) {
+    alert('Error: ' + e.message);
+  }
 }
 
 // ========== LAWYER REGISTRATION ==========
