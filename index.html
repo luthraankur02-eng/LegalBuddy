@@ -489,6 +489,10 @@
         <div class="nav-section-title">Lawyer</div>
         <div class="nav-item" onclick="showPage('dashboard')"><span class="nav-icon">📊</span> My Dashboard</div>
       </div>
+      <div class="nav-section">
+        <div class="nav-section-title">Legal</div>
+        <div class="nav-item" onclick="showPage('terms')"><span class="nav-icon">📋</span> Disclaimer & Terms</div>
+      </div>
 
       <div class="logout-btn" onclick="doLogout()">🚪 Logout</div>
     </div>
@@ -704,7 +708,58 @@
         <div id="my-questions-list"></div>
       </div>
 
-      <!-- LAWYER DASHBOARD -->
+      <!-- DISCLAIMER / TERMS -->
+      <div id="terms-page" class="page">
+        <div class="page-title">📋 Disclaimer & Terms</div>
+        <div class="page-subtitle">Please read carefully before using LegalBuddy</div>
+        <div class="card" style="border-left: 3px solid var(--red);">
+          <h3 style="color:var(--red);margin-bottom:12px">⚠️ Important Disclaimer</h3>
+          <p style="line-height:1.8;color:var(--text)">LegalBuddy is an <strong style="color:var(--white)">AI-powered legal information platform</strong> designed for <strong style="color:var(--white)">educational and informational purposes only</strong>. The information provided on this platform:</p>
+          <br>
+          <ul style="line-height:2;color:var(--text);padding-left:20px">
+            <li>Does <strong style="color:var(--red)">NOT</strong> constitute legal advice</li>
+            <li>Does <strong style="color:var(--red)">NOT</strong> create a lawyer-client relationship</li>
+            <li>Should <strong style="color:var(--red)">NOT</strong> be used as a substitute for professional legal counsel</li>
+            <li>May <strong style="color:var(--red)">NOT</strong> be accurate, complete, or up-to-date</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 style="color:var(--gold);margin-bottom:12px">📜 Terms of Use</h3>
+          <div style="line-height:1.9;color:var(--text);font-size:0.9rem">
+            <p><strong style="color:var(--white)">1. Acceptance</strong><br>By using LegalBuddy, you agree to these terms. If you disagree, please discontinue use immediately.</p>
+            <br>
+            <p><strong style="color:var(--white)">2. Nature of Service</strong><br>LegalBuddy provides general legal information using AI technology. All content is for knowledge purposes only. For any legal matter, always consult a qualified lawyer registered with the Bar Council of India.</p>
+            <br>
+            <p><strong style="color:var(--white)">3. No Legal Advice</strong><br>Nothing on this platform shall be construed as legal advice. LegalBuddy is not a law firm and does not practice law. The AI responses are generated automatically and may contain errors.</p>
+            <br>
+            <p><strong style="color:var(--white)">4. Limitation of Liability</strong><br>LegalBuddy and its creators shall not be liable for any loss, damage, or consequence arising from reliance on information provided on this platform.</p>
+            <br>
+            <p><strong style="color:var(--white)">5. Third-Party Lawyers</strong><br>Lawyers listed on LegalBuddy are independent professionals. LegalBuddy does not verify their credentials and is not responsible for their advice or conduct.</p>
+            <br>
+            <p><strong style="color:var(--white)">6. Privacy</strong><br>Your queries may be processed by AI systems. Do not share sensitive personal information such as Aadhaar, PAN, or bank details on this platform.</p>
+            <br>
+            <p><strong style="color:var(--white)">7. Governing Law</strong><br>These terms are governed by the laws of India. Any disputes shall be subject to the jurisdiction of courts in India.</p>
+            <br>
+            <p><strong style="color:var(--white)">8. Changes</strong><br>LegalBuddy reserves the right to modify these terms at any time without prior notice.</p>
+          </div>
+        </div>
+        <div class="card" style="border-left: 3px solid var(--green);">
+          <h3 style="color:var(--green);margin-bottom:12px">✅ What LegalBuddy CAN help with</h3>
+          <ul style="line-height:2;color:var(--text);padding-left:20px">
+            <li>Understanding general legal concepts and IPC/CrPC sections</li>
+            <li>Finding lawyers in your area</li>
+            <li>Generating draft documents for reference only</li>
+            <li>Learning about your basic legal rights</li>
+            <li>Setting court date reminders</li>
+          </ul>
+        </div>
+        <div class="card" style="background:rgba(224,92,92,0.05);border:1px solid rgba(224,92,92,0.2)">
+          <p style="text-align:center;color:var(--text2);font-size:0.85rem">
+            For legal emergencies, contact a qualified lawyer immediately.<br>
+            <strong style="color:var(--gold)">Legal Aid Helpline: 15100</strong> (National Legal Services Authority)
+          </p>
+        </div>
+      </div>
       <div id="dashboard-page" class="page">
         <div class="page-title">📊 Lawyer Dashboard</div>
         <div class="page-subtitle">Manage your consultations and earnings</div>
