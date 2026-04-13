@@ -492,6 +492,7 @@
       <div class="nav-section">
         <div class="nav-section-title">Legal</div>
         <div class="nav-item" onclick="showPage('terms')"><span class="nav-icon">📋</span> Disclaimer & Terms</div>
+        <div class="nav-item" onclick="showPage('register-lawyer')"><span class="nav-icon">⚖️</span> Register as Lawyer</div>
       </div>
 
       <div class="logout-btn" onclick="doLogout()">🚪 Logout</div>
@@ -540,7 +541,7 @@
         <div class="chat-messages" id="chat-messages">
           <div class="msg ai">
             <div class="msg-avatar">⚖</div>
-            <div class="msg-bubble">Namaste! Main LegalBuddy AI hoon. Indian law ke baare mein kuch bhi puchh sakte hain — Hindi ya English mein. Kaise help karun? 🙏</div>
+            <div class="msg-bubble">Namaste! Main LegalBuddy hoon. Indian law ke baare mein kuch bhi puchh sakte hain — Hindi ya English mein. Kaise help karun? 🙏</div>
           </div>
         </div>
         <div class="chat-input-area">
@@ -760,7 +761,93 @@
           </p>
         </div>
       </div>
-      <div id="dashboard-page" class="page">
+      <!-- LAWYER REGISTRATION -->
+      <div id="register-lawyer-page" class="page">
+        <div class="page-title">⚖️ Register as Lawyer</div>
+        <div class="page-subtitle">Join LegalBuddy — Verified lawyers only. All registrations are manually reviewed.</div>
+        <div class="card" style="border-left:3px solid var(--gold);margin-bottom:20px">
+          <p style="color:var(--text);font-size:0.9rem;line-height:1.7">
+            🔍 <strong style="color:var(--white)">Verification Process:</strong> Your Bar Council enrollment number will be verified. Only approved lawyers will appear in the directory. This process takes 24-48 hours.
+          </p>
+        </div>
+        <div class="card">
+          <div class="doc-form" id="lawyer-reg-form">
+            <label>Full Name (as per Bar Council)</label>
+            <input type="text" id="lr-name" placeholder="Adv. Rajesh Kumar Sharma" />
+            <label>Email Address</label>
+            <input type="email" id="lr-email" placeholder="your@email.com" />
+            <label>Phone Number</label>
+            <input type="tel" id="lr-phone" placeholder="10-digit mobile number" />
+            <label>Bar Council Enrollment Number ⚠️ (Mandatory)</label>
+            <input type="text" id="lr-barno" placeholder="e.g. D/1234/2010 or MH/5678/2015" />
+            <label>State Bar Council</label>
+            <select id="lr-barstate">
+              <option value="">Select State Bar Council</option>
+              <option>Bar Council of Delhi</option>
+              <option>Bar Council of Maharashtra & Goa</option>
+              <option>Bar Council of Uttar Pradesh</option>
+              <option>Bar Council of Punjab & Haryana</option>
+              <option>Bar Council of Rajasthan</option>
+              <option>Bar Council of Gujarat</option>
+              <option>Bar Council of Karnataka</option>
+              <option>Bar Council of Tamil Nadu & Puducherry</option>
+              <option>Bar Council of Telangana</option>
+              <option>Bar Council of Andhra Pradesh</option>
+              <option>Bar Council of Kerala</option>
+              <option>Bar Council of West Bengal</option>
+              <option>Bar Council of Madhya Pradesh</option>
+              <option>Bar Council of Bihar</option>
+              <option>Bar Council of Odisha</option>
+              <option>Other</option>
+            </select>
+            <label>Year of Enrollment</label>
+            <input type="text" id="lr-year" placeholder="e.g. 2010" />
+            <label>Primary Specialization</label>
+            <select id="lr-spec">
+              <option value="">Select Specialization</option>
+              <option>Criminal Law</option>
+              <option>Family Law</option>
+              <option>Property Law</option>
+              <option>Corporate Law</option>
+              <option>Consumer Rights</option>
+              <option>Labour Law</option>
+              <option>Civil Matters</option>
+              <option>Constitutional Law</option>
+              <option>Cyber Law</option>
+              <option>Tax Law</option>
+              <option>Intellectual Property</option>
+              <option>Other</option>
+            </select>
+            <label>City / Location</label>
+            <input type="text" id="lr-city" placeholder="e.g. Delhi, Mumbai, Bangalore" />
+            <label>Court(s) where you practice</label>
+            <input type="text" id="lr-courts" placeholder="e.g. Delhi High Court, Tis Hazari District Court" />
+            <label>Years of Experience</label>
+            <input type="text" id="lr-exp" placeholder="e.g. 8" />
+            <label>Consultation Fee (₹ per hour)</label>
+            <input type="text" id="lr-fee" placeholder="e.g. 500" />
+            <label>Brief Bio (max 200 words)</label>
+            <textarea id="lr-bio" placeholder="Tell clients about your experience, notable cases, expertise..."></textarea>
+            <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;padding:14px;margin-bottom:16px">
+              <p style="color:var(--text2);font-size:0.82rem;line-height:1.7">
+                ✅ By submitting, I confirm that:<br>
+                • I am a licensed advocate enrolled with Bar Council of India<br>
+                • All information provided is accurate and truthful<br>
+                • I agree to LegalBuddy's Terms of Service<br>
+                • I understand fake registrations will be reported to Bar Council
+              </p>
+            </div>
+            <button class="btn-primary" onclick="submitLawyerRegistration()" id="lr-submit-btn">Submit for Verification</button>
+          </div>
+          <div id="lr-success" style="display:none;text-align:center;padding:30px">
+            <div style="font-size:3rem;margin-bottom:16px">✅</div>
+            <h3 style="color:var(--white);margin-bottom:8px">Application Submitted!</h3>
+            <p style="color:var(--text2)">Your registration is under review. We will verify your Bar Council enrollment and get back to you within 24-48 hours.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAWYER DASHBOARD -->
         <div class="page-title">📊 Lawyer Dashboard</div>
         <div class="page-subtitle">Manage your consultations and earnings</div>
         <div class="earnings-card">
@@ -1354,6 +1441,51 @@ function renderMyQuestions() {
       <span class="question-status ${q.answer ? 'status-answered' : 'status-pending'}">${q.answer ? '✅ Answered' : '⏳ Pending'}</span>
       ${q.answer ? `<div class="answer-box" style="display:block">💬 ${q.answer}</div>` : ''}
     </div>`).join('');
+}
+
+// ========== LAWYER REGISTRATION ==========
+async function submitLawyerRegistration() {
+  const name = document.getElementById('lr-name').value.trim();
+  const email = document.getElementById('lr-email').value.trim();
+  const phone = document.getElementById('lr-phone').value.trim();
+  const barno = document.getElementById('lr-barno').value.trim();
+  const barstate = document.getElementById('lr-barstate').value;
+  const year = document.getElementById('lr-year').value.trim();
+  const spec = document.getElementById('lr-spec').value;
+  const city = document.getElementById('lr-city').value.trim();
+  const courts = document.getElementById('lr-courts').value.trim();
+  const exp = document.getElementById('lr-exp').value.trim();
+  const fee = document.getElementById('lr-fee').value.trim();
+  const bio = document.getElementById('lr-bio').value.trim();
+
+  if (!name || !email || !phone || !barno || !barstate || !spec || !city) {
+    alert('Please fill all mandatory fields including Bar Council Enrollment Number!');
+    return;
+  }
+  if (phone.length !== 10 || isNaN(phone)) {
+    alert('Please enter a valid 10-digit phone number!');
+    return;
+  }
+
+  const btn = document.getElementById('lr-submit-btn');
+  btn.textContent = 'Submitting...';
+  btn.disabled = true;
+
+  try {
+    await db.collection('lawyer_registrations').add({
+      name, email, phone, barno, barstate, year,
+      spec, city, courts, exp, fee, bio,
+      status: 'pending',
+      submittedAt: new Date(),
+      submittedBy: currentUser ? currentUser.uid : 'anonymous'
+    });
+    document.getElementById('lawyer-reg-form').style.display = 'none';
+    document.getElementById('lr-success').style.display = 'block';
+  } catch(e) {
+    alert('Error submitting. Please try again.');
+    btn.textContent = 'Submit for Verification';
+    btn.disabled = false;
+  }
 }
 
 // ========== LAWYER DASHBOARD ==========
