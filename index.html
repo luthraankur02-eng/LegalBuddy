@@ -559,32 +559,86 @@
 
       <!-- HOME -->
       <div id="home-page" class="page active">
-        <div class="welcome-banner">
-          <h2>Namaste, <span id="welcome-name">User</span>! 🙏</h2>
-          <p>How can LegalBuddy help you with legal matters today?</p>
+        <!-- Hero Banner -->
+        <div style="background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.03));border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden">
+          <div style="position:absolute;right:20px;top:20px;font-size:4rem;opacity:0.08">⚖️</div>
+          <div style="font-size:0.78rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px">India's #1 AI Legal Assistant</div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--white);margin-bottom:10px;line-height:1.3">Namaste, <span style="color:var(--gold)" id="welcome-name">User</span>! 🙏</h2>
+          <p style="color:var(--text2);margin-bottom:20px;line-height:1.7">Legal help ab aasaan hai — Hindi ya English mein, bilkul FREE!</p>
+          <button class="btn-primary" style="width:auto;padding:12px 28px;font-size:0.95rem" onclick="showPage('chat')">🤖 AI se Poochho</button>
         </div>
-        <div class="quick-actions">
-          <div class="quick-action" onclick="showPage('chat')">
-            <div class="quick-action-icon">🤖</div>
-            <div class="quick-action-label">AI Legal Chat</div>
-          </div>
-          <div class="quick-action" onclick="showPage('lawyers')">
-            <div class="quick-action-icon">👨‍⚖️</div>
-            <div class="quick-action-label">Find Lawyers</div>
-          </div>
-          <div class="quick-action" onclick="showPage('docs')">
-            <div class="quick-action-icon">📄</div>
-            <div class="quick-action-label">Make Document</div>
-          </div>
-          <div class="quick-action" onclick="showPage('reminders')">
-            <div class="quick-action-icon">🔔</div>
-            <div class="quick-action-label">Court Reminder</div>
-          </div>
-        </div>
-        <div class="grid-3">
-          <div class="stat-card"><div class="stat-num">500+</div><div class="stat-label">Verified Lawyers</div></div>
-          <div class="stat-card"><div class="stat-num">IPC+CrPC</div><div class="stat-label">Laws Searchable</div></div>
+
+        <!-- Stats -->
+        <div class="grid-3" style="margin-bottom:24px">
+          <div class="stat-card"><div class="stat-num">100+</div><div class="stat-label">IPC/CrPC Sections</div></div>
+          <div class="stat-card"><div class="stat-num">10+</div><div class="stat-label">Document Types</div></div>
           <div class="stat-card"><div class="stat-num">24/7</div><div class="stat-label">AI Legal Help</div></div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="color:var(--text2);font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Quick Access</div>
+        <div class="quick-actions" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+          <div class="quick-action" onclick="showPage('chat')"><div class="quick-action-icon">🤖</div><div class="quick-action-label">AI Legal Chat</div></div>
+          <div class="quick-action" onclick="showPage('lawyers')"><div class="quick-action-icon">👨‍⚖️</div><div class="quick-action-label">Find Lawyers</div></div>
+          <div class="quick-action" onclick="showPage('docs')"><div class="quick-action-icon">📄</div><div class="quick-action-label">Documents</div></div>
+          <div class="quick-action" onclick="showPage('ipc')"><div class="quick-action-icon">📖</div><div class="quick-action-label">IPC / CrPC</div></div>
+          <div class="quick-action" onclick="showPage('reminders')"><div class="quick-action-icon">🔔</div><div class="quick-action-label">Reminders</div></div>
+          <div class="quick-action" onclick="showPage('ask')"><div class="quick-action-icon">❓</div><div class="quick-action-label">Ask Lawyer</div></div>
+          <div class="quick-action" onclick="showPage('ipc');document.getElementById('ipc-search').value='bail';searchIPC()"><div class="quick-action-icon">🔓</div><div class="quick-action-label">Bail Info</div></div>
+          <div class="quick-action" onclick="showPage('ipc');document.getElementById('ipc-search').value='FIR';searchIPC()"><div class="quick-action-icon">📋</div><div class="quick-action-label">FIR Rights</div></div>
+        </div>
+
+        <!-- Popular Topics -->
+        <div style="color:var(--text2);font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Popular Legal Topics</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Divorce</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Property Dispute</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Consumer Rights</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Domestic Violence</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Labour Law</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Cyber Crime</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Cheating / Fraud</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Bail Application</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">RTI</span>
+          <span class="tag" style="cursor:pointer;padding:8px 14px" onclick="showPage('chat')">Dowry Harassment</span>
+        </div>
+
+        <!-- Emergency Helplines -->
+        <div style="color:var(--text2);font-size:0.78rem;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px">Emergency Helplines</div>
+        <div class="grid-2" style="margin-bottom:24px">
+          <div style="background:rgba(224,92,92,0.08);border:1px solid rgba(224,92,92,0.2);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-size:1.4rem;margin-bottom:6px">🆘</div>
+            <div style="color:var(--white);font-weight:600">Legal Aid</div>
+            <div style="color:var(--red);font-size:1.2rem;font-weight:700;margin-top:4px">15100</div>
+            <div style="color:var(--text2);font-size:0.75rem">NALSA Helpline</div>
+          </div>
+          <div style="background:rgba(76,175,130,0.08);border:1px solid rgba(76,175,130,0.2);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-size:1.4rem;margin-bottom:6px">👩</div>
+            <div style="color:var(--white);font-weight:600">Women Helpline</div>
+            <div style="color:var(--green);font-size:1.2rem;font-weight:700;margin-top:4px">1091</div>
+            <div style="color:var(--text2);font-size:0.75rem">24/7 Available</div>
+          </div>
+          <div style="background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-size:1.4rem;margin-bottom:6px">👮</div>
+            <div style="color:var(--white);font-weight:600">Police</div>
+            <div style="color:var(--gold);font-size:1.2rem;font-weight:700;margin-top:4px">100</div>
+            <div style="color:var(--text2);font-size:0.75rem">Emergency</div>
+          </div>
+          <div style="background:rgba(100,150,255,0.08);border:1px solid rgba(100,150,255,0.2);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-size:1.4rem;margin-bottom:6px">👧</div>
+            <div style="color:var(--white);font-weight:600">Child Helpline</div>
+            <div style="color:#6496ff;font-size:1.2rem;font-weight:700;margin-top:4px">1098</div>
+            <div style="color:var(--text2);font-size:0.75rem">Childline India</div>
+          </div>
+        </div>
+
+        <!-- Are you a Lawyer? -->
+        <div style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.15);border-radius:12px;padding:20px;display:flex;align-items:center;justify-content:space-between;gap:16px">
+          <div>
+            <div style="color:var(--white);font-weight:600;margin-bottom:4px">⚖️ Are you a Lawyer?</div>
+            <div style="color:var(--text2);font-size:0.83rem">Join LegalBuddy — Register free, reach more clients!</div>
+          </div>
+          <button class="btn-sm btn-gold" onclick="showPage('register-lawyer')">Register</button>
         </div>
       </div>
 
