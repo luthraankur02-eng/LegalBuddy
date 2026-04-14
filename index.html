@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LegalBuddy — Indian Legal Assistant</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#c9a84c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="LegalBuddy" />
+  <link rel="apple-touch-icon" href="/icon-192.png" />
+
+  <!-- SEO -->
+  <meta name="description" content="India's AI legal assistant — Find lawyers, search IPC/CrPC, generate legal documents" />
+  <meta name="keywords" content="legal, lawyer, IPC, CrPC, India, legal advice, legal documents" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
@@ -936,6 +948,13 @@
 </div>
 
 <script>
+// ========== PWA SERVICE WORKER ==========
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW error:', err));
+  });
+}
+
 // ========== FIREBASE CONFIG ==========
 const firebaseConfig = {
   apiKey: "AIzaSyBhb7FZGNCjUPutCwT-_Ty7QBSoiZA36Yc",
@@ -1129,14 +1148,7 @@ async function loadApprovedLawyers() {
     approvedLawyersFromDB = [];
   }
 }
-const lawyersData = [
-  { name: 'Adv. Priya Sharma', spec: 'Criminal Law', city: 'Delhi', exp: '12 yrs', fee: '₹500/hr', rating: '4.8', icon: '👩‍⚖️' },
-  { name: 'Adv. Rajesh Kumar', spec: 'Family Law', city: 'Mumbai', exp: '8 yrs', fee: '₹400/hr', rating: '4.6', icon: '👨‍⚖️' },
-  { name: 'Adv. Meena Iyer', spec: 'Property Law', city: 'Chennai', exp: '15 yrs', fee: '₹600/hr', rating: '4.9', icon: '👩‍⚖️' },
-  { name: 'Adv. Amit Singh', spec: 'Corporate Law', city: 'Bangalore', exp: '10 yrs', fee: '₹800/hr', rating: '4.7', icon: '👨‍⚖️' },
-  { name: 'Adv. Sunita Patel', spec: 'Consumer Rights', city: 'Ahmedabad', exp: '6 yrs', fee: '₹300/hr', rating: '4.5', icon: '👩‍⚖️' },
-  { name: 'Adv. Vikram Rao', spec: 'Criminal Law', city: 'Hyderabad', exp: '20 yrs', fee: '₹700/hr', rating: '4.9', icon: '👨‍⚖️' },
-];
+const lawyersData = [];
 
 function renderLawyers(filter='', specFilter='') {
   const list = document.getElementById('lawyers-list');
@@ -1145,7 +1157,10 @@ function renderLawyers(filter='', specFilter='') {
     (l.name.toLowerCase().includes(filter.toLowerCase()) || l.city.toLowerCase().includes(filter.toLowerCase()) || l.spec.toLowerCase().includes(filter.toLowerCase())) &&
     (specFilter === '' || l.spec.includes(specFilter))
   );
-  if(!data.length) { list.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No lawyers found</p></div>'; return; }
+  if(!data.length) { 
+    list.innerHTML = '<div class="empty-state"><div class="empty-icon">👨‍⚖️</div><p>Abhi koi verified lawyer nahi hai.<br><span style="color:var(--gold);cursor:pointer" onclick="showPage(\'register-lawyer\')">Lawyer hain? Register karein!</span></p></div>'; 
+    return; 
+  }
   list.innerHTML = data.map(l => `
     <div class="lawyer-card" style="margin-bottom:12px">
       <div class="lawyer-avatar">${l.icon || '👨‍⚖️'}</div>
